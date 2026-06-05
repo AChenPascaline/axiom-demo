@@ -551,14 +551,20 @@ tbody tr:hover td { background: var(--surf2); cursor: pointer; }
 .leg-sep { color: var(--dim); font-size: 14px; }
 .leg-arr { font-size: 9px; color: var(--muted); white-space: nowrap; }
 
-/* ── THEME BUTTON ───────────────────────────────────────── */
-.theme-btn {
-  background: var(--surf2); border: 1px solid var(--border);
-  color: var(--muted); padding: 5px 12px; border-radius: 6px;
-  cursor: pointer; font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 500; transition: all 0.2s; margin-left: 6px;
+/* ── THEME TOGGLE ───────────────────────────────────────── */
+.theme-toggle {
+  display: flex; border: 1px solid var(--border); border-radius: 7px;
+  overflow: hidden; margin-left: 6px; background: var(--surf2);
 }
-.theme-btn:hover { border-color: var(--border2); color: var(--text); }
+.tt-btn {
+  background: none; border: none; border-right: 1px solid var(--border);
+  color: var(--muted); padding: 5px 11px; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500;
+  transition: background 0.15s, color 0.15s; white-space: nowrap;
+}
+.tt-btn:last-child { border-right: none; }
+.tt-btn:hover { color: var(--text); background: var(--border); }
+.tt-btn.active { background: var(--border2); color: var(--text); font-weight: 600; }
 .ctrl-hint { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.45; min-height: 14px; }
 
 /* ── LIGHT THEME ────────────────────────────────────────── */
@@ -672,7 +678,11 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
       <span id="stext">HEALTHY</span>
     </div>
     <span class="last-update" id="last-upd">Live</span>
-    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme (T)">☀ Light</button>
+    <div class="theme-toggle" title="Switch theme (T)">
+      <button class="tt-btn" id="tt-dark"  onclick="applyTheme('dark')" >☾ Dark</button>
+      <button class="tt-btn" id="tt-slate" onclick="applyTheme('slate')">◈ Slate</button>
+      <button class="tt-btn" id="tt-light" onclick="applyTheme('light')">☀ Light</button>
+    </div>
   </div>
 </nav>
 
@@ -1848,8 +1858,10 @@ function applyTheme(theme) {
   document.body.classList.remove('light', 'slate');
   if (theme === 'light') document.body.classList.add('light');
   if (theme === 'slate') document.body.classList.add('slate');
-  const labels = { dark: '☀ Light', light: '◈ Slate', slate: '☾ Dark' };
-  document.getElementById('theme-btn').textContent = labels[theme] || '☀ Light';
+  ['dark','slate','light'].forEach(t => {
+    const b = document.getElementById('tt-'+t);
+    if (b) b.classList.toggle('active', t === theme);
+  });
   const grid = theme === 'light' ? '#e2e8f0' : theme === 'slate' ? '#334155' : '#101828';
   const tick = theme === 'light' ? '#64748b' : theme === 'slate' ? '#94a3b8' : '#546882';
   [cLat, cEvict, cUtil, cTput, cRoi].forEach(ch => {
@@ -1869,8 +1881,8 @@ function toggleTheme() {
   applyTheme({ dark: 'light', light: 'slate', slate: 'dark' }[cur]);
 }
 function initTheme() {
-  const t = localStorage.getItem('axiom-theme');
-  if (t === 'light' || t === 'slate') applyTheme(t);
+  const t = localStorage.getItem('axiom-theme') || 'dark';
+  applyTheme(t);
 }
 
 document.addEventListener('keydown', e => {
