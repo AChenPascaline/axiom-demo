@@ -662,6 +662,14 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
   </div>
 </nav>
 
+<div style="background:linear-gradient(135deg,#080b18 0%,#0b1120 100%);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+  <div style="flex:1;min-width:280px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">Axiom is a tiered KV cache runtime that plugs into vLLM and cuts inference cost by 10–20× vs. cloud GPU.</div>
+    <div style="font-size:12px;color:var(--muted)">Adjust load and sessions below to see Axiom manage memory across GDDR7 → DDR → NVMe in real time. Toggle Axiom OFF (top-right) to compare.</div>
+  </div>
+  <button class="btn primary" onclick="document.querySelectorAll('.nav-tab')[6].click()">See Cost Analysis →</button>
+</div>
+
 <!-- ═══════════════════ DASHBOARD PAGE ═══════════════════ -->
 <div class="page active" id="page-dashboard">
 
@@ -756,6 +764,9 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
         <div class="stat-row"><span class="slabel">vLLM tok/s</span><span class="sval green" id="st-tput">--</span></div>
         <div class="stat-row"><span class="slabel">Bus utilization</span><span class="sval purple" id="st-bus">--</span></div>
       </div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--surf2);font-size:11px;color:var(--muted);line-height:1.5">
+        Toggle <span style="color:var(--green);font-weight:600">Axiom ON/OFF</span> in the top-right to see tok/s and miss rate change live.
+      </div>
     </div>
   </div>
 
@@ -778,7 +789,11 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
     </div>
   </div>
 
-  <div class="card" style="margin-top:18px">
+  <div style="font-size:10px;color:var(--muted);padding:6px 4px 14px;line-height:1.6">
+    Chart values are simulated projections for the RTX PRO 6000 target hardware. Validated result on Lambda A10: ~175 tok/s baseline (TinyLlama-1.1B, single-stream) · throughput scales with model size, concurrency, and cache hit rate.
+  </div>
+
+  <div class="card" style="margin-top:0">
     <div class="chart-title" style="margin-bottom:14px">How Axiom Plugs Into vLLM</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
       <div>
