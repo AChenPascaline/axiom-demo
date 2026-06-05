@@ -574,6 +574,20 @@ body.light nav       { background: #ffffff; }
 body.light #log-wrap { background: #f8fafc; }
 body.light .log-row  { border-bottom-color: #e2e8f0; }
 body.light .log-row:hover { background: #f1f5f9; }
+
+/* ── SLATE THEME ────────────────────────────────────────── */
+body.slate {
+  --bg:        #0f172a; --surf:      #1e293b; --surf2:     #26354a;
+  --border:    #334155; --border2:   #475569;
+  --gold:      #f59e0b; --gold-dim:  #d97706; --gold-glow: rgba(245,158,11,0.15);
+  --cyan:      #22d3ee; --blue:      #60a5fa; --green:     #34d399;
+  --red:       #f87171; --amber:     #fbbf24; --purple:    #c084fc;
+  --text:      #e2e8f0; --muted:     #94a3b8; --dim:       #475569;
+}
+body.slate nav       { background: #0b1221; }
+body.slate #log-wrap { background: #0b1221; }
+body.slate .log-row  { border-bottom-color: #1e293b; }
+body.slate .log-row:hover { background: #1a2742; }
 /* Hardware */
 body.light .pcb-outer  { background: #f0fdf4; border-color: #4ade80; }
 body.light .pcb-lbl    { color: #166534; }
@@ -662,7 +676,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
   </div>
 </nav>
 
-<div style="background:linear-gradient(135deg,#080b18 0%,#0b1120 100%);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+<div style="background:linear-gradient(135deg,var(--bg) 0%,var(--surf) 100%);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
   <div style="flex:1;min-width:280px">
     <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">Axiom is a tiered KV cache runtime that plugs into vLLM and cuts inference cost by 10–20× vs. cloud GPU.</div>
     <div style="font-size:12px;color:var(--muted)">Adjust load and sessions below to see Axiom manage memory across GDDR7 → DDR → NVMe in real time. Toggle Axiom OFF (top-right) to compare.</div>
@@ -1830,11 +1844,14 @@ function updateAllHints() {
 // ══════════════════════════════════════════════════════
 //  THEME · KEYBOARD · LOCALSTORAGE
 // ══════════════════════════════════════════════════════
-function applyTheme(light) {
-  document.body.classList.toggle('light', light);
-  document.getElementById('theme-btn').textContent = light ? '☾ Dark' : '☀ Light';
-  const grid = light ? '#e2e8f0' : '#101828';
-  const tick = light ? '#64748b' : '#546882';
+function applyTheme(theme) {
+  document.body.classList.remove('light', 'slate');
+  if (theme === 'light') document.body.classList.add('light');
+  if (theme === 'slate') document.body.classList.add('slate');
+  const labels = { dark: '☀ Light', light: '◈ Slate', slate: '☾ Dark' };
+  document.getElementById('theme-btn').textContent = labels[theme] || '☀ Light';
+  const grid = theme === 'light' ? '#e2e8f0' : theme === 'slate' ? '#334155' : '#101828';
+  const tick = theme === 'light' ? '#64748b' : theme === 'slate' ? '#94a3b8' : '#546882';
   [cLat, cEvict, cUtil, cTput, cRoi].forEach(ch => {
     if (!ch) return;
     Object.values(ch.options.scales||{}).forEach(s => {
@@ -1845,10 +1862,16 @@ function applyTheme(light) {
     if (ch.options.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = tick;
     ch.update('none');
   });
-  localStorage.setItem('axiom-theme', light ? 'light' : 'dark');
+  localStorage.setItem('axiom-theme', theme);
 }
-function toggleTheme() { applyTheme(!document.body.classList.contains('light')); }
-function initTheme()   { if (localStorage.getItem('axiom-theme') === 'light') applyTheme(true); }
+function toggleTheme() {
+  const cur = document.body.classList.contains('light') ? 'light' : document.body.classList.contains('slate') ? 'slate' : 'dark';
+  applyTheme({ dark: 'light', light: 'slate', slate: 'dark' }[cur]);
+}
+function initTheme() {
+  const t = localStorage.getItem('axiom-theme');
+  if (t === 'light' || t === 'slate') applyTheme(t);
+}
 
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
