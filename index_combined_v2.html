@@ -1671,7 +1671,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
       <div class="ctrl-label" data-tip="Fraction of KV block requests served from Axiom cache instead of GPU recompute. Higher hit rate = more effective throughput per GPU. Real-world values: 65–85% for typical LLM workloads with repeated context.">Cache Hit Rate</div>
       <input type="range" min="0" max="90" value="75" id="sl-ca-hit" oninput="setCaHit(+this.value)">
       <div class="ctrl-val" id="lbl-ca-hit" style="color:var(--green)">75%</div>
-      <div class="ctrl-hint">Modeled assumption — adjust to match your workload</div>
+      <div class="ctrl-hint">Modeled assumption, calibration pending (TODO_CALIBRATE) — adjust to match your workload</div>
     </div>
     <div class="ctrl">
       <div class="ctrl-label">Electricity ($/kWh)</div>
@@ -1799,7 +1799,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
       <span class="ca-comp-val" id="ca-bar-openai-lbl">--</span>
     </div>
     <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--surf2);font-size:10px;color:var(--muted)">
-      H100 PCIe baseline 180 tok/s · Axiom effective throughput scales with cache hit rate · cloud at equivalent A100 throughput · OpenAI GPT-4o blended $15/1M input + $60/1M output · Cloud prices as of June 2026
+      H100 PCIe baseline 180 tok/s (target hardware, modeled) · <span id="ca-fn-a10">A10 measurement pending trial data</span> · Axiom effective throughput scales with cache hit rate · cloud at equivalent A100 throughput · OpenAI GPT-4o blended $15/1M input + $60/1M output · Cloud prices as of June 2026
     </div>
   </div>
 
@@ -2201,6 +2201,19 @@ function renderProvenanceStrip(trial) {
   el.style.display = 'flex';
 }
 
+// Display-only — sets CA_A10_MEASURED_TPUT and the Cost Analysis footnote
+// clause from the loaded trial. Never feeds caCalc(); see TODO_CALIBRATE
+// note above CA_A10_MEASURED_TPUT's declaration.
+function renderCostFootnote(trial) {
+  const { doc, off } = trial;
+  CA_A10_MEASURED_TPUT = off.throughput_toks_s;
+  const el = document.getElementById('ca-fn-a10');
+  if (el) {
+    el.textContent = 'Measured A10 baseline (trial ' + doc.provenance.git.sha.slice(0, 7) + '): ' +
+      Math.round(CA_A10_MEASURED_TPUT) + ' tok/s, display only';
+  }
+}
+
 function applyTrialToInvestorSnapshot(trial) {
   const { off, on, doc } = trial;
   const bTput = Math.round(off.throughput_toks_s);
@@ -2233,6 +2246,7 @@ function applyTrialToInvestorSnapshot(trial) {
       if (!trial) throw new Error('results.json missing a required field for sessions=' + TRIAL_TIER_SESSIONS);
       window.__trial = trial;
       renderProvenanceStrip(trial);
+      renderCostFootnote(trial);
     })
     .catch(err => {
       console.error('[axiom] trial summary not loaded — Investor Snapshot will show simulated values:', err);
@@ -2573,7 +2587,21 @@ const CA_CLOUD_RATES  = { runpod:1.99, aws:3.20, lambda:1.10 };
 const CA_CLOUD_LABELS = { runpod:'RunPod A100', aws:'AWS A100 (p4d)', lambda:'Lambda A10' };
 const CA_VOL_STEPS    = [100000,500000,1000000,2000000,5000000,10000000,20000000,50000000];
 const CA_OPENAI_1M    = 25;    // GPT-4o blended $15/1M input + $60/1M output, see comparison footnote
+// TODO_CALIBRATE (Part 2, dashboard-trial-data plan): caHit default below and
+// the 0.65 factor in caCalc() are both blocked on a reuse-adequate
+// calibration trial (v2 A10 re-run, or Trial 3 if JC provides it).
+// nvme_smoke_49723e6 (the trial results.json ships with) is DISQUALIFIED for
+// this specific purpose — its measured reuse was near-zero for this factor's
+// intended use, making T_on/T_off meaningless as a calibration input. It IS
+// still valid for the separate, display-only CA_A10_MEASURED_TPUT below.
+// Derivation once a valid trial exists: factor = (1 - T_off/T_on) / H,
+// where H is the trial's measured state_hit_rate. Do not average multiple
+// trials; do not estimate; leave at 0.65 if no valid single trial exists.
 let caVolIdx=4, caHit=75, caElecCents=12, caCloudKey='runpod', caGpus=8, caHrs=20;
+
+// Display-only measured A10 baseline — sourced from window.__trial once
+// results.json loads (see loadTrialSummary()). Never referenced in caCalc().
+let CA_A10_MEASURED_TPUT = null;
 
 function caFmt(v){ return v>=1e6?(v/1e6).toFixed(v>=10e6?0:1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v; }
 
@@ -2582,6 +2610,10 @@ function caCalc(){
   const rate=CA_CLOUD_RATES[caCloudKey]||1.99;
   const hrsMonth  = caHrs*30;
   const totalCapex = CA_CAPEX * caGpus;
+  // TODO_CALIBRATE: 0.65 is an unverified modeled assumption ("cache hit
+  // skips ~65% of prefill compute"), not derived from a trial. See the
+  // TODO_CALIBRATE note above CA_A10_MEASURED_TPUT for the derivation
+  // formula and why nvme_smoke_49723e6 can't be used to replace it yet.
   const effTput   = CA_TPUT / (1 - hit*0.65);          // cache hit skips ~65% of prefill compute
   const tokMonth  = tokDay*30;
   const monthlyElec  = CA_KW * caGpus * hrsMonth * elec;  // scales with GPU count and hours
