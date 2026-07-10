@@ -1482,7 +1482,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
         <div class="cpu-mrtr">axiom_miss_router thread</div>
         <div class="cpu-ddr5c">
           <div class="cddr-title">DDR5 memory controller</div>
-          <div class="cddr-bw">38.4 GB/s ch (DDR5-4800)</div>
+          <div class="cddr-bw">102.4 GB/s (DDR5-6400, dual ch)</div>
         </div>
       </div>
 
@@ -1493,7 +1493,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
       <span class="hot-lbl">▲ HOT TIER</span>
       <div class="ddr5-busbar">
         <div class="ddr5-bus-ln"></div>
-        <span class="ddr5-bus-txt">DDR5 bus · 38.4 GB/s</span>
+        <span class="ddr5-bus-txt">DDR5 bus · 102.4 GB/s</span>
         <div class="ddr5-bus-ln"></div>
       </div>
       <span class="cold-lbl">COLD TIER ▼</span>
@@ -1525,7 +1525,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
         <div class="dimm-chip">64GB</div>
       </div>
       <div class="st-stat">1 TB total</div>
-      <div class="st-stat">38.4 GB/s (DDR5-4800)</div>
+      <div class="st-stat">102.4 GB/s (DDR5-6400)</div>
       <div class="st-badge">cudaMallocHost (pinned)</div>
     </div>
 
@@ -1575,22 +1575,22 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
     <div class="bw-head">Relative bandwidth</div>
     <div class="bw-r">
       <span class="bw-nm" style="color:#b48cff">PCIe</span>
-      <div class="bw-trk"><div class="bw-fill" style="width:100%;background:linear-gradient(90deg,#5030a0,#b48cff)"></div></div>
+      <div class="bw-trk"><div class="bw-fill" style="width:62.5%;background:linear-gradient(90deg,#5030a0,#b48cff)"></div></div>
       <span class="bw-vl">64 GB/s</span>
     </div>
     <div class="bw-r">
       <span class="bw-nm" style="color:#f0a020">DDR5</span>
-      <div class="bw-trk"><div class="bw-fill" style="width:60%;background:linear-gradient(90deg,#904010,#f0a020)"></div></div>
-      <span class="bw-vl">38.4 GB/s</span>
+      <div class="bw-trk"><div class="bw-fill" style="width:100%;background:linear-gradient(90deg,#904010,#f0a020)"></div></div>
+      <span class="bw-vl">102.4 GB/s</span>
     </div>
     <div class="bw-r">
       <span class="bw-nm" style="color:#00c896">NVMe</span>
-      <div class="bw-trk"><div class="bw-fill" style="width:11.6%;background:linear-gradient(90deg,#005535,#00c896)"></div></div>
+      <div class="bw-trk"><div class="bw-fill" style="width:7.2%;background:linear-gradient(90deg,#005535,#00c896)"></div></div>
       <span class="bw-vl">7.4 GB/s</span>
     </div>
     <div class="bw-r">
       <span class="bw-nm" style="color:#546882">Net</span>
-      <div class="bw-trk"><div class="bw-fill" style="width:19.5%;background:linear-gradient(90deg,#1e2e3e,#546882)"></div></div>
+      <div class="bw-trk"><div class="bw-fill" style="width:12.2%;background:linear-gradient(90deg,#1e2e3e,#546882)"></div></div>
       <span class="bw-vl">12.5 GB/s (theoretical)</span>
     </div>
   </div>
@@ -1598,7 +1598,7 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
   <!-- ── Legend ──────────────────────────────────── -->
   <div class="leg-row">
     <div class="leg-chip" style="--lc:#4a9eff">T0 HBM3 &lt;5µs · ~2 TB/s</div>
-    <div class="leg-chip" style="--lc:#f0a020">T1 DDR5 &lt;20µs · 38.4 GB/s</div>
+    <div class="leg-chip" style="--lc:#f0a020">T1 DDR5 &lt;20µs · 102.4 GB/s</div>
     <div class="leg-chip" style="--lc:#00c896">T2 NVMe &gt;100µs · 7.4 GB/s</div>
     <div class="leg-chip" style="--lc:#546882">T3 Net ~40ms</div>
     <div class="leg-sep">|</div>
@@ -1616,14 +1616,14 @@ body.light [style*="border-color:#302010"] { border-color: #fed7aa !important; }
 <div class="page" id="page-system">
 <div class="cards">
 <div class="card" style="border-color:#1a3060"><div class="card-title" style="color:var(--blue)">&#9642; Total VRAM (T0)</div><div class="card-val" style="color:var(--blue)">640 GB</div><div class="card-sub">8 x 80 GB HBM3 &middot; ~2 TB/s each</div></div>
-<div class="card" style="border-color:#302010"><div class="card-title" style="color:var(--gold)">&#9642; System RAM (T1)</div><div class="card-val" style="color:var(--gold)">1 TB</div><div class="card-sub">DDR5-4800 ECC &middot; ~300 GB/s total</div></div>
+<div class="card" style="border-color:#302010"><div class="card-title" style="color:var(--gold)">&#9642; System RAM (T1)</div><div class="card-val" style="color:var(--gold)">1 TB</div><div class="card-sub">DDR5-6400 ECC &middot; ~102.4 GB/s total</div></div>
 <div class="card" style="border-color:#0e3028"><div class="card-title" style="color:var(--green)">&#9642; NVMe (T2)</div><div class="card-val" style="color:var(--green)">4 TB</div><div class="card-sub">Samsung 990 Pro &middot; 7.4 GB/s</div></div>
 <div class="card"><div class="card-title" style="color:var(--purple)">&#9642; Axiom KV Cache</div><div class="card-val" style="color:var(--purple)">~5 TB</div><div class="card-sub">Unified tier space &middot; all GPUs</div></div>
 </div>
 <div class="sys-node"><div class="sys-node-lbl">SERVER NODE</div>
 <div class="sys-host">
 <div class="sys-cpu-box"><div class="sys-cpu-title">CPU</div><div class="sys-cpu-sub">Server Platform</div><div class="sys-cpu-sub" style="margin-top:6px;color:var(--dim)">PCIe Gen5 x16 x2</div><div class="sys-cpu-sub" style="color:var(--dim)">&#8597; PCIe Sw A &amp; B</div></div>
-<div class="sys-ddr-box"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="sys-ddr-title">DDR5-4800 ECC &nbsp; 1 TB</div><div class="sys-ddr-sub">8 channels &middot; 38.4 GB/s each &middot; ~300 GB/s aggregate</div></div><div class="sys-tier-badge" style="color:var(--gold)">Axiom T1 Tier</div></div><div class="sys-dimm-row"><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div></div><div style="margin-top:8px;font-size:9px;color:var(--muted)">&#8597; PCIe DMA bridge &mdash; Axiom moves HBM3 overflow here automatically</div></div>
+<div class="sys-ddr-box"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="sys-ddr-title">DDR5-6400 ECC &nbsp; 1 TB</div><div class="sys-ddr-sub">2 channels (dual) &middot; 51.2 GB/s each &middot; 102.4 GB/s aggregate</div></div><div class="sys-tier-badge" style="color:var(--gold)">Axiom T1 Tier</div></div><div class="sys-dimm-row"><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div><div class="sys-dimm">128G</div></div><div style="margin-top:8px;font-size:9px;color:var(--muted)">&#8597; PCIe DMA bridge &mdash; Axiom moves HBM3 overflow here automatically</div></div>
 </div>
 <div class="sys-pcie-row"><div class="sys-pcie-line"></div><div class="sys-pcie-lbl">PCIe Gen5 x16 &mdash; ~64 GB/s per link</div><div class="sys-pcie-line"></div></div>
 <div class="sys-switches">
